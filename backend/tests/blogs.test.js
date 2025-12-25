@@ -24,6 +24,25 @@ const listWithOneBlogAndZeroLikes = [
   }
 ]
 
+const twoBlogs = [
+  {
+    _id: "5a422a851b54a676234d17f7",
+    title: "React patterns",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 7,
+    __v: 0
+  },
+  {
+    _id: "5a422aa71b54a676234d17f8",
+    title: "Go To Statement Considered Harmful",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    likes: 5,
+    __v: 0
+  }
+]
+
 const blogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -117,6 +136,33 @@ describe('favorite blog', () => {
 
   test('when no blogs return nothing', () => {
     const result = listHelper.favoriteBlog([])
+    assert.strictEqual(result, undefined)
+  })
+})
+
+describe('most blogs', () => {
+  test('when most blogs returns correct author', () => {
+    const result = listHelper.mostBlogs(blogs)
+    assert.strictEqual(result.author, "Robert C. Martin")
+  })
+
+  test('when most blogs returns correct blog amount', () => {
+    const result = listHelper.mostBlogs(blogs)
+    assert.strictEqual(result.blogs, 3)
+  })
+
+  test('when many authors have most blogs returns one author name', () => {
+    const result = listHelper.mostBlogs(twoBlogs)
+    assert.strictEqual(result.author, "Michael Chan")
+  })
+
+  test('when many authors have most blogs returns one blog amount', () => {
+    const result = listHelper.mostBlogs(twoBlogs)
+    assert.strictEqual(result.blogs, 1)
+  })
+
+  test('when no blogs returns undefined', () => {
+    const result = listHelper.mostBlogs([])
     assert.strictEqual(result, undefined)
   })
 })
