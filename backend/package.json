@@ -1,0 +1,24 @@
+{
+  "name": "fullstack-blogilista",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "ISC",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongodb": "^7.0.0",
+    "mongoose": "^8.20.4",
+    "morgan": "^1.10.1"
+  }
+}
