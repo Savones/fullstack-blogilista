@@ -113,6 +113,20 @@ test('if blog has no url returns 400 bad request', async () => {
     .expect(400)
 })
 
+test('a blog can be deleted', async () => {
+  const response = await api.get('/api/blogs')
+
+  await api
+    .delete(`/api/blogs/${response.body[0].id}`)
+    .expect(204)
+
+  const responseAfter = await api.get('/api/blogs')
+  const titles = responseAfter.body.map(n => n.title)
+  assert(!titles.includes('My first blog'))
+
+  assert.strictEqual(responseAfter.body.length, 1)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
