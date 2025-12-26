@@ -40,10 +40,38 @@ const mostBlogs = (blogs) => {
   return result
 }
 
+const mostLikes = (blogs) => {
+  help_dict = {}
+
+  blogs.forEach((blog) => {
+    if (help_dict[blog.author] === undefined) {
+      help_dict[blog.author] = blog.likes
+    } else {
+      help_dict[blog.author] += blog.likes
+    }
+  })
+
+  let result = { author: null, likes: 0 };
+  for (author in help_dict) {
+    if (help_dict[author] > result.likes) {
+      result = {
+        author,
+        likes: help_dict[author]
+      }
+    }
+  }
+
+  if (result.author == null) {
+    result = undefined
+  }
+
+  return result
+}
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }

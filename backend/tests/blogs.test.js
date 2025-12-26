@@ -38,7 +38,7 @@ const twoBlogs = [
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    likes: 5,
+    likes: 7,
     __v: 0
   }
 ]
@@ -163,6 +163,33 @@ describe('most blogs', () => {
 
   test('when no blogs returns undefined', () => {
     const result = listHelper.mostBlogs([])
+    assert.strictEqual(result, undefined)
+  })
+})
+
+describe('most likes', () => {
+  test('when most likes returns correct author', () => {
+    const result = listHelper.mostLikes(blogs)
+    assert.strictEqual(result.author, "Edsger W. Dijkstra")
+  })
+
+  test('when most likes returns correct like amount', () => {
+    const result = listHelper.mostLikes(blogs)
+    assert.strictEqual(result.likes, 17)
+  })
+
+  test('when many authors have most likes returns one author name', () => {
+    const result = listHelper.mostLikes(twoBlogs)
+    assert.strictEqual(result.author, "Michael Chan")
+  })
+
+  test('when many authors have most likes returns one like amount', () => {
+    const result = listHelper.mostLikes(twoBlogs)
+    assert.strictEqual(result.likes, 7)
+  })
+
+  test('when no blogs returns undefined', () => {
+    const result = listHelper.mostLikes([])
     assert.strictEqual(result, undefined)
   })
 })
