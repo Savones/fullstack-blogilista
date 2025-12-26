@@ -57,6 +57,24 @@ test('blog has a id field and not _id', async () => {
   })
 })
 
+test('posting a blog adds one blog to all blogs', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'New blog post',
+      author: 'Hemmo Herhäläinen',
+      likes: 19
+    })
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map(r => r.title)
+
+  assert.strictEqual(response.body.length, initialBlogs.length + 1)
+  assert(titles.includes('New blog post'))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
