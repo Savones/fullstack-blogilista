@@ -48,6 +48,15 @@ test('a specific blog is within the returned blogs', async () => {
   assert(titles.includes('My first blog'))
 })
 
+test('blog has a id field and not _id', async () => {
+  const response = await api.get('/api/blogs')
+
+  response.body.forEach(blog => {
+    assert(blog.id !== undefined)
+    assert(blog._id === undefined)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
