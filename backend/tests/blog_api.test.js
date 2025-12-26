@@ -11,11 +11,13 @@ const initialBlogs = [
   {
     title: 'My first blog',
     author: "Mikko Rantanen",
+    url: "firstblog.fi",
     likes: 5
   },
   {
     title: 'Another blog',
     author: "Maija Meikäläinen",
+    url: "secondblog.com",
     likes: 0
   },
 ]
@@ -63,6 +65,7 @@ test('posting a blog adds one blog to all blogs', async () => {
     .send({
       title: 'New blog post',
       author: 'Hemmo Herhäläinen',
+      url: "newblog.fi",
       likes: 19
     })
     .expect(201)
@@ -80,11 +83,34 @@ test('if blogs like amount is not given assert it to zero', async () => {
     .post('/api/blogs')
     .send({
       title: 'New blog post',
-      author: 'Hemmo Herhäläinen'
+      author: 'Hemmo Herhäläinen',
+      url: "blogtest.fi"
     })
 
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body[response.body.length - 1].likes, 0)
+})
+
+test('if blog has no title returns 400 bad request', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      author: 'Hemmo Herhäläinen',
+      url: "blogtest.fi",
+      likes: 6
+    })
+    .expect(400)
+})
+
+test('if blog has no url returns 400 bad request', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      title: "New blog",
+      author: 'Hemmo Herhäläinen',
+      likes: 6
+    })
+    .expect(400)
 })
 
 after(async () => {
