@@ -75,6 +75,18 @@ test('posting a blog adds one blog to all blogs', async () => {
   assert(titles.includes('New blog post'))
 })
 
+test('if blogs like amount is not given assert it to zero', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'New blog post',
+      author: 'Hemmo Herhäläinen'
+    })
+
+  const response = await api.get('/api/blogs')
+  assert.strictEqual(response.body[response.body.length - 1].likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
