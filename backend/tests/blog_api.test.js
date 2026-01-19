@@ -2,6 +2,7 @@ const assert = require('node:assert')
 const { test, after, beforeEach } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
 const Blog = require('../models/blog')
 
@@ -139,6 +140,121 @@ test('blog likes can be updated', async () => {
   const afterResponse = await api.get('/api/blogs')
   const updatedBlog = afterResponse.body[0]
   assert.strictEqual(updatedBlog.likes, 100)
+})
+
+test('gives statuscode 400 if username is not unique', async () => {
+  const initialUsers = await helper.usersInDb()
+  const newUser = {
+    username: 'ihminen123',
+    name: 'Matti Luukkainen',
+    password: 'salasana'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfter = await helper.usersInDb()
+  assert(result.body.error.includes('expected `username` to be unique'))
+
+  assert.strictEqual(usersAfter.length, initialUsers.length)
+})
+
+test('if username is missing gives statuscode 400', async () => {
+  const initialUsers = await helper.usersInDb()
+  const newUser = {
+    name: 'Matti Luukkainen',
+    password: 'salasana'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfter = await helper.usersInDb()
+  assert(result.body.error.includes('name missing'))
+
+  assert.strictEqual(usersAfter.length, initialUsers.length)
+})
+
+test('if password is missing gives statuscode 400', async () => {
+  const initialUsers = await helper.usersInDb()
+  const newUser = {
+    username: 'kaveri',
+    name: 'Matti Luukkainen'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfter = await helper.usersInDb()
+  assert(result.body.error.includes('password missing'))
+
+  assert.strictEqual(usersAfter.length, initialUsers.length)
+})
+
+test('if username length less than 3 gives statuscode 400', async () => {
+  const initialUsers = await helper.usersInDb()
+  const newUser = {
+    username: 'ih',
+    name: 'Matti Luukkainen',
+    password: 'salasana'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfter = await helper.usersInDb()
+  assert(result.body.error.includes('username has to be minimum 3 characters'))
+
+  assert.strictEqual(usersAfter.length, initialUsers.length)
+})
+
+test('if password length less than 3 gives statuscode 400', async () => {
+  const initialUsers = await helper.usersInDb()
+  const newUser = {
+    username: 'ihminen',
+    name: 'Matti Luukkainen',
+    password: 'sa'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfter = await helper.usersInDb()
+  assert(result.body.error.includes('password has to be minimum 3 characters'))
+
+  assert.strictEqual(usersAfter.length, initialUsers.length)
+})
+
+test('user can be added', async () => {
+  const initialUsers = await helper.usersInDb()
+  const newUser = {
+    username: 'uusikäyttäjä',
+    name: 'Liisa Ihmemaa',
+    password: 'salasana'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfter = await helper.usersInDb()
+  assert.strictEqual(usersAfter.length, initialUsers.length + 1)
 })
 
 after(async () => {
