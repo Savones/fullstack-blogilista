@@ -1,0 +1,10 @@
+post http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVzc3Vza2EiLCJpZCI6IjY5NmUzY2NhMDJhNTY5NjQwNzU2ODBiMiIsImlhdCI6MTc2ODgzMzY0NX0.sgpbCr17U0ls7QD_REyrhVslCPTzh_lUvzAs8AMi1g0
+
+{
+    "title": "Only logged in persons title",
+    "author": "Minä",
+    "url": "https//testblog982.com",
+    "likes": 0
+}
