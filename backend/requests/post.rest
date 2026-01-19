@@ -1,3 +1,10 @@
-delete http://localhost:3003/api/blogs/696e319c01cc0ba91c36d62e
+post http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVzc3Vza2EiLCJpZCI6IjY5NmUzY2NhMDJhNTY5NjQwNzU2ODBiMiIsImlhdCI6MTc2ODgzNjIyMH0.Lo0_v9-KZoRuI-LPEasP7_YdWtUAfd7E2oYaRZxZ7Ao
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVzc3Vza2EiLCJpZCI6IjY5NmUzY2NhMDJhNTY5NjQwNzU2ODBiMiIsImlhdCI6MTc2ODg1MTI1NH0.reSMHF9ZOUx7RUPhjJm_5Wsukn77g1X3w4H5rHhHm0o
+
+{
+  "title": "Testi blogi",
+  "author": "Minä",
+  "url": "https://testiblogi",
+  "like": 28
+}
