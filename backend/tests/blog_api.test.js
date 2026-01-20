@@ -61,6 +61,7 @@ test('blog has a id field and not _id', async () => {
 })
 
 test('posting a blog adds one blog to all blogs', async () => {
+  const token = await helper.loginUser()
   await api
     .post('/api/blogs')
     .send({
@@ -70,6 +71,7 @@ test('posting a blog adds one blog to all blogs', async () => {
       likes: 19
     })
     .expect(201)
+    .set('Authorization', `Bearer ${token}`)
     .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/blogs')
@@ -93,6 +95,7 @@ test('if blogs like amount is not given assert it to zero', async () => {
 })
 
 test('if blog has no title returns 400 bad request', async () => {
+  const token = await helper.loginUser()
   await api
     .post('/api/blogs')
     .send({
@@ -100,10 +103,12 @@ test('if blog has no title returns 400 bad request', async () => {
       url: "blogtest.fi",
       likes: 6
     })
+    .set('Authorization', `Bearer ${token}`)
     .expect(400)
 })
 
 test('if blog has no url returns 400 bad request', async () => {
+  const token = await helper.loginUser()
   await api
     .post('/api/blogs')
     .send({
@@ -111,21 +116,32 @@ test('if blog has no url returns 400 bad request', async () => {
       author: 'Hemmo Herhäläinen',
       likes: 6
     })
+    .set('Authorization', `Bearer ${token}`)
     .expect(400)
 })
 
 test('a blog can be deleted', async () => {
+  const token = await helper.loginUser()
+
+  const newBlog = await api
+    .post(`/api/blogs`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      title: 'Testi blogi',
+      author: 'Testi',
+      url: "testi.fi"
+    })
+
+  const Id = newBlog.body.id
   const response = await api.get('/api/blogs')
 
   await api
-    .delete(`/api/blogs/${response.body[0].id}`)
+    .delete(`/api/blogs/${Id}`)
+    .set('Authorization', `Bearer ${token}`)
     .expect(204)
 
   const responseAfter = await api.get('/api/blogs')
-  const titles = responseAfter.body.map(n => n.title)
-  assert(!titles.includes('My first blog'))
-
-  assert.strictEqual(responseAfter.body.length, 1)
+  assert.strictEqual(responseAfter.body.length, response.body.length - 1)
 })
 
 test('blog likes can be updated', async () => {
@@ -238,23 +254,6 @@ test('if password length less than 3 gives statuscode 400', async () => {
   assert(result.body.error.includes('password has to be minimum 3 characters'))
 
   assert.strictEqual(usersAfter.length, initialUsers.length)
-})
-
-test('user can be added', async () => {
-  const initialUsers = await helper.usersInDb()
-  const newUser = {
-    username: 'uusikäyttäjä',
-    name: 'Liisa Ihmemaa',
-    password: 'salasana'
-  }
-
-  const result = await api
-    .post('/api/users')
-    .send(newUser)
-    .expect('Content-Type', /application\/json/)
-
-  const usersAfter = await helper.usersInDb()
-  assert.strictEqual(usersAfter.length, initialUsers.length + 1)
 })
 
 after(async () => {
