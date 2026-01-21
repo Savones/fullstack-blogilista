@@ -43,6 +43,22 @@ const App = () => {
       })
   }
 
+  const likeBlog = (blogObject) => {
+    blogService
+      .updateLike(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog =>
+          blog.id === returnedBlog.id ? returnedBlog : blog
+        ))
+        setSuccessMessage(
+          `blog ${returnedBlog.title} liked successfully.`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      })
+  }
+
   const handleLogin = async event => {
     event.preventDefault()
 
@@ -115,7 +131,7 @@ const App = () => {
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={likeBlog} />
       )}
     </div>
   )
