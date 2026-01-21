@@ -17,3 +17,17 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.blog {
+  background-color: floralwhite;
+  border: 1px solid grey;
+  padding: 5px;
+}
+
+.blog div {
+  padding-bottom: 5px;
+}
+
+.blogs {
+  padding: 10px 0px 0px 0px;
+}
