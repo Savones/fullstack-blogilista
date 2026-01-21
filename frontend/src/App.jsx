@@ -59,6 +59,22 @@ const App = () => {
       })
   }
 
+  const removeBlog = (blogObject) => {
+    blogService
+      .deleteBlog(blogObject)
+      .then(() => {
+        setBlogs(blogs =>
+          blogs.filter(blog => blog.id !== blogObject.id)
+        )
+        setSuccessMessage(
+          `blog ${blogObject.title} removed successfully.`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      })
+  }
+
   const handleLogin = async event => {
     event.preventDefault()
 
@@ -131,7 +147,7 @@ const App = () => {
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={likeBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={likeBlog} deleteBlog={removeBlog} />
       )}
     </div>
   )

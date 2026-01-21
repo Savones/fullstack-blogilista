@@ -31,3 +31,17 @@
 .blogs {
   padding: 10px 0px 0px 0px;
 }
+
+.removeButton {
+  background-color: darkred;
+  color: aliceblue;
+}
+
+.removeButton:hover {
+  background-color: aliceblue;
+  color: darkred;
+}
+
+button {
+  cursor: pointer;
+}
