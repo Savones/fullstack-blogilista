@@ -50,6 +50,7 @@ describe('Blog app', function () {
 
         cy.contains('blog New blog title by author New Author was successfully added.')
         cy.get('.blog').contains('New blog title')
+        cy.get('.blogs').should('have.length', 1)
       })
 
       describe('a blog exists exists', function () {
@@ -65,6 +66,13 @@ describe('Blog app', function () {
           cy.get('button').contains('view').click()
           cy.get('button').contains('like').click()
           cy.contains('likes: 1')
+        })
+
+        it('user can delete their own blog', function () {
+          cy.get('button').contains('view').click()
+          cy.get('button').contains('remove').click()
+          cy.contains('blog Another Blog removed successfully.')
+          cy.get('.blogs').should('have.length', 0)
         })
       })
     })
