@@ -22,12 +22,14 @@ describe('Blog app', function () {
       cy.contains('Minä logged in')
     })
 
-    it('fails with wrong credentials', function () {
+    it('fails with wrong username', function () {
       cy.contains('label', 'username').type('essusk')
       cy.contains('label', 'password').type('salainen')
       cy.contains('button', 'login').click()
       cy.contains('wrong username or password')
+    })
 
+    it('fails with wrong password', function () {
       cy.contains('label', 'username').type('essuska')
       cy.contains('label', 'password').type('salaine')
       cy.contains('button', 'login').click()
@@ -48,6 +50,22 @@ describe('Blog app', function () {
 
         cy.contains('blog New blog title by author New Author was successfully added.')
         cy.get('.blog').contains('New blog title')
+      })
+
+      describe('a blog exists exists', function () {
+        beforeEach(function () {
+          cy.createBlog({
+            title: 'Another Blog',
+            author: 'Blogger',
+            url: 'blogger.com'
+          })
+        })
+
+        it('A blog can be liked', function () {
+          cy.get('button').contains('view').click()
+          cy.get('button').contains('like').click()
+          cy.contains('likes: 1')
+        })
       })
     })
   })
