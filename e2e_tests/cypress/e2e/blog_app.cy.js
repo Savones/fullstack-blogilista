@@ -6,7 +6,15 @@ describe('Blog app', function () {
       username: 'essuska',
       password: 'salainen'
     }
+
+    const secondUser = {
+      name: 'Second',
+      username: 'second',
+      password: 'salainen'
+    }
+
     cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.request('POST', 'http://localhost:3003/api/users', secondUser)
     cy.visit('http://localhost:5173')
   })
 
@@ -73,6 +81,15 @@ describe('Blog app', function () {
           cy.get('button').contains('remove').click()
           cy.contains('blog Another Blog removed successfully.')
           cy.get('.blogs').should('have.length', 0)
+        })
+
+        it('only correct user can see remove button', function () {
+          cy.get('button').contains('view').click()
+          cy.get('button').contains('remove')
+          cy.get('button').contains('log out').click()
+          cy.login({ username: 'second', password: 'salainen' })
+          cy.get('button').contains('view').click()
+          cy.contains('button', 'remove').should('not.exist')
         })
       })
     })
